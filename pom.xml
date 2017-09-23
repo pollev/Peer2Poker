@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>Peer2Poker</groupId>
+  <artifactId>Peer2Poker</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Peer2Poker</name>
+  <description>Peer2Poker is a robust all-in-one NAT traversal library</description>
+  
+  <properties>
+    <slf4jVersion>1.7.6</slf4jVersion>
+    <Log4jVersion>1.7.5</Log4jVersion>
+  </properties>
+  
+  <build>
+  
+	<!-- This allows us to place config files outside of the jar
+       - Doing this means you have to setup eclipse to use your resources folder (run configurations, advanced, add folder, browse to main/resources)
+       - Check: http://stackoverflow.com/questions/5132389/if-using-maven-usually-you-put-log4j-properties-under-java-or-resources
+       - for more info, or the readme for this project -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <targetPath>${project.build.directory}/config/</targetPath>
+        <includes>
+          <include>log4j.properties</include>
+        </includes>
+      </resource>
+      
+      <resource>
+        <directory>src/main/resources</directory>
+        <!-- No target path = jar base-->
+        <includes>
+        </includes>
+      </resource>
+    </resources>
+  
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-javadoc-plugin</artifactId>
+		<executions>
+		  <execution>
+		    <id>attach-javadocs</id>
+			<goals>
+			  <goal>jar</goal>
+		    </goals>
+		  </execution>
+		</executions>
+	  </plugin>
+	  
+	  <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/libs
+              </outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>libs/</classpathPrefix>
+              <mainClass>test.Peer2PokerTest</mainClass>
+            </manifest>
+            <!-- This allows custom adding to the class path ( . is all in map) -->
+            <manifestEntries>
+                 <Class-Path>config/.</Class-Path>
+             </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+	  
+    </plugins>
+    
+  </build>
+  
+  
+  <dependencies>
+  	<dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4jVersion}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${Log4jVersion}</version>
+    </dependency>
+    
+  </dependencies>
+  
+  
+</project>
+
