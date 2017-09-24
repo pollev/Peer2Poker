@@ -93,6 +93,11 @@ public class UPNP {
         // Stop gateway
         processBus.send(new KillProcessRequest()); // can kill this after discovery
 
+        logger.warn("Using automatic port mapping to setup connection.");
+        logger.warn("This will create a portmapping for " + portMappingLifetime + " seconds and refresh it as long as you do not call close() on the server socket.");
+        logger.warn("You should understand this means that if you kill the application and restart it within this period without calling close() (or if the NAT device does not support removal of portmappings). The direct connection technique will succeed because the portmap is still there.");
+        logger.warn("However, this means that the application is not refreshing the portmap, and when the time is up, you will get a connection timeout");
+        logger.warn("if this happens. Simply ask for a new connection, it will now detect that a direct connection cannot work, and request a new portmapping that it will refresh properly");
         return true;
     }
     
