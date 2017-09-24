@@ -46,6 +46,25 @@ public class DirectConnection {
     }
     
     /**
+     * Start the direct connection server socket on the given port
+     * 
+     * @param port
+     *          The port for the direct connection socket
+     * @return
+     *          The server socket for the direct connection
+     */
+    public static ServerSocket getDirectConnectionServerSocket(int port){
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket = new ServerSocket(port);
+        } catch (IOException e) {
+            logger.error("Failed to start server socket for direct connection");
+            e.printStackTrace();
+        }
+        return serverSocket;
+    }
+    
+    /**
      * Test a direct connection to ourself using our external ip address
      * <p>
      * We test this by first figuring out our external ip address from a webserver.

@@ -14,7 +14,7 @@ public class Peer2PokerTest {
         logger.info("Starting Peer2Poker");
         
         Peer2PokerClient client = new Peer2PokerClient(ServerType.NOSERVER);
-        client.getServerSocket(9000);
+        client.getServerSocket(9001);
         
     }
 }

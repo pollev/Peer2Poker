@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import client.techniques.DirectConnection;
+import client.techniques.UPNP;
 
 public class Peer2PokerClient {
     
@@ -81,14 +82,38 @@ public class Peer2PokerClient {
      */
     public ServerSocket getServerSocket(int port){
         ServerSocket serverSocket = null;
+        
         // First we need to find out if we are already remotely reachable
         logger.info("ATTEMPTING TECHNIQUE: Direct connection");
         if(DirectConnection.isDirectConnectionPossible(this, port)){
             logger.info("RESULT: Direct connection is possible, using regular server socket");
+            serverSocket = DirectConnection.getDirectConnectionServerSocket(port);
+            return serverSocket;
         }else{
             logger.info("RESULT: Direct connection not possible");
         }
+        
         // If this fails, we try to forward the port on the NAT device
+        logger.info("ATTEMPTING TECHNIQUE: Port forward using portmapper");
+        UPNP portmapper = new UPNP();
+        if(portmapper.forwardport(port)){
+            if(DirectConnection.isDirectConnectionPossible(this, port)){
+                logger.info("RESULT: Port forward is possible, using regular server socket");
+                port = portmapper.getMappedPort();
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                serverSocket = DirectConnection.getDirectConnectionServerSocket(port);
+                return serverSocket;
+            }else{
+                logger.info("RESULT: Port forward not possible");
+            }
+        }else{
+            logger.info("RESULT: Port forward not possible");
+        }
         
         return serverSocket;
     }
