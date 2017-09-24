@@ -38,6 +38,7 @@ public class UPNP {
         Bus networkBus = network.getBus();
         Bus processBus = process.getBus();
 
+        logger.info("Portmapper might throw errors messages, please ignore these. It is robust enough to still succeed");
         // Discover port forwarding devices and take the first one found
         List<PortMapper> mappers;
         try {

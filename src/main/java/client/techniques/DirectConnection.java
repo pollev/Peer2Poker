@@ -56,7 +56,9 @@ public class DirectConnection {
     public static ServerSocket getDirectConnectionServerSocket(int port){
         ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket();
+            serverSocket.setReuseAddress(true);
+            serverSocket.bind(new InetSocketAddress("0.0.0.0", port));
         } catch (IOException e) {
             logger.error("Failed to start server socket for direct connection");
             e.printStackTrace();
@@ -94,7 +96,7 @@ public class DirectConnection {
         
         try {
             // Make a test server
-            final ServerSocket welcomeSocket = new ServerSocket(port);
+            final ServerSocket welcomeSocket = getDirectConnectionServerSocket(port);
             new Thread(() -> startTestListener(welcomeSocket)).start();
             // make a test client
             Socket clientSocket = new Socket();
@@ -103,9 +105,9 @@ public class DirectConnection {
                 clientSocket.connect(new InetSocketAddress(externalIp, port), 1000);
                 directConnectionPossible = true;
             }catch(SocketTimeoutException e){
-                welcomeSocket.close();
                 directConnectionPossible = false;
             }finally {
+                welcomeSocket.close();
                 clientSocket.close();
             }
         } catch (IOException e2) {
@@ -125,7 +127,8 @@ public class DirectConnection {
      */
     private static void startTestListener(ServerSocket welcomeSocket){
         try {
-            welcomeSocket.accept();
+            Socket connection = welcomeSocket.accept();
+            connection.close();
         } catch (IOException e) {
             // Socket closed is the expected exception
             if(!e.getMessage().equalsIgnoreCase("socket closed")){

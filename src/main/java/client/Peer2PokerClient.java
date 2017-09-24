@@ -100,12 +100,6 @@ public class Peer2PokerClient {
             if(DirectConnection.isDirectConnectionPossible(this, port)){
                 logger.info("RESULT: Port forward is possible, using regular server socket");
                 port = portmapper.getMappedPort();
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
                 serverSocket = DirectConnection.getDirectConnectionServerSocket(port);
                 return serverSocket;
             }else{
