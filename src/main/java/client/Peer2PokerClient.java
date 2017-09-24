@@ -35,6 +35,7 @@ public class Peer2PokerClient {
      */
     public Peer2PokerClient(ServerType serverType){
         this.serverType = serverType;
+        logger.info("Creating new Peer2PokerClient with server setting " + this.serverType);
     }
     
     /**
@@ -107,7 +108,7 @@ public class Peer2PokerClient {
             if(DirectConnection.isDirectConnectionPossible(this, port)){
                 logger.info("RESULT: Port forward is possible, using regular server socket");
                 port = portmapper.getMappedPort();
-                serverSocket = DirectConnection.getDirectConnectionServerSocket(port);
+                serverSocket = portmapper.getUPNPServerSocket(port);
                 return serverSocket;
             }else{
                 logger.info("RESULT: Port forward not possible");

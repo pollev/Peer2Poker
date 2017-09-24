@@ -1,5 +1,8 @@
 package client.techniques.portmapper;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -91,6 +94,27 @@ public class UPNP {
         processBus.send(new KillProcessRequest()); // can kill this after discovery
 
         return true;
+    }
+    
+    /**
+     * Start the UPNP direct connection server socket on the given port
+     * 
+     * @param port
+     *          The port for the UPNP direct connection socket
+     * @return
+     *          The server socket for the direct connection
+     */
+    public ServerSocket getUPNPServerSocket(int port){
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket = new UPNPServerSocket(lifeTimeExtender);
+            serverSocket.setReuseAddress(true);
+            serverSocket.bind(new InetSocketAddress("0.0.0.0", port));
+        } catch (IOException e) {
+            logger.error("Failed to start server socket for UPNP direct connection");
+            e.printStackTrace();
+        }
+        return serverSocket;
     }
 
     /**

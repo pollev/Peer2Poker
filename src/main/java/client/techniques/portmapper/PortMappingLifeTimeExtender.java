@@ -35,6 +35,7 @@ public class PortMappingLifeTimeExtender implements Runnable{
                 logger.info("Port mapping refreshed: " + mappedPort);
             }
             // Unmap port
+            logger.info("Removing port mapping");
             mapper.unmapPort(mappedPort);
         } catch (InterruptedException e) {
             logger.error("Port mapping lifetime extender got interrupted: " + e.getMessage());
