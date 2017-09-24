@@ -26,13 +26,13 @@ public class PortMappingLifeTimeExtender implements Runnable{
 
     @Override
     public void run() {
-        // Refresh mapping half-way through the lifetime of the mapping (for example,
-        // if the mapping is available for 40 seconds, refresh it every 20 seconds)
+        // Refresh mapping 6 times through the lifetime of the mapping (for example,
+        // if the mapping is available for 60 seconds, refresh it every 10 seconds)
         try {
             while(!shutdown) {
                 mappedPort = mapper.refreshPort(mappedPort, mappedPort.getLifetime());
                 logger.info("Port mapping refreshed: " + mappedPort);
-                Thread.sleep(mappedPort.getLifetime() * 1000L / 2L);
+                Thread.sleep(mappedPort.getLifetime() * 1000L / 6L);
             }
             // Unmap port
             logger.info("Removing port mapping");

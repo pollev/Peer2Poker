@@ -27,7 +27,7 @@ public class UPNP {
 
     private MappedPort mappedPort = null;
     private PortMappingLifeTimeExtender lifeTimeExtender = null;
-    private final int portMappingLifetime = 120;
+    private final int portMappingLifetime = 1800; // half hour
 
     /**
      * Attempt to forward the requested port using portmapper
