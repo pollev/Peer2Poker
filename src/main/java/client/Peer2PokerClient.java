@@ -106,7 +106,7 @@ public class Peer2PokerClient {
         UPNP portmapper = new UPNP();
         if(portmapper.forwardport(this, port)){
             if(DirectConnection.isDirectConnectionPossible(this, port)){
-                logger.info("RESULT: Port forward is possible, using regular server socket");
+                logger.info("RESULT: Port forward is possible, using UPNP server socket");
                 port = portmapper.getMappedPort();
                 serverSocket = portmapper.getUPNPServerSocket(port);
                 return serverSocket;
