@@ -1,4 +1,4 @@
-package client.techniques;
+package client.techniques.directconnection;
 
 import java.io.BufferedReader;
 import java.io.IOException;

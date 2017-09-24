@@ -6,8 +6,8 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import client.techniques.DirectConnection;
-import client.techniques.UPNP;
+import client.techniques.directconnection.DirectConnection;
+import client.techniques.portmapper.UPNP;
 
 public class Peer2PokerClient {
     
@@ -73,6 +73,13 @@ public class Peer2PokerClient {
      * This can happen if for example the actual connection is going through the relay server.
      * If this is the case, it will be handled by Peer2Poker in a transparent way. You can use the socket as if the connection was direct.
      * <p>
+     * One exception to this transparency is when you are using the NOSERVER setting and the socket port could not be the requested port.
+     * In this case you should manually communicate to the client which port he must connect on.
+     * You can check the current used port as normal by calling getLocalPort() on the returned server socket.
+     * This is fairly rare and only happens if an automatic port forward could be done but not on the requested port.
+     * When using the SETUPSERVER or RELAYSERVER setting. This port change will be communicated to the client automatically
+     * 
+     * <p>
      * When you call accept() on the ServerSocket, depending on the ServerType of this Peer2PokerClient and the success or failure of some NAT traversal techniques
      * a connection will be made to the setupserver/relayserver to prepare for incoming connections 
      * 
@@ -96,7 +103,7 @@ public class Peer2PokerClient {
         // If this fails, we try to forward the port on the NAT device
         logger.info("ATTEMPTING TECHNIQUE: Port forward using portmapper");
         UPNP portmapper = new UPNP();
-        if(portmapper.forwardport(port)){
+        if(portmapper.forwardport(this, port)){
             if(DirectConnection.isDirectConnectionPossible(this, port)){
                 logger.info("RESULT: Port forward is possible, using regular server socket");
                 port = portmapper.getMappedPort();

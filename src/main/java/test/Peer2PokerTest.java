@@ -1,5 +1,7 @@
 package test;
 
+import java.net.ServerSocket;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,11 +12,13 @@ public class Peer2PokerTest {
 
     public static final Logger logger = LoggerFactory.getLogger(Peer2PokerTest.class);
 	
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         logger.info("Starting Peer2Poker");
         
         Peer2PokerClient client = new Peer2PokerClient(ServerType.NOSERVER);
-        client.getServerSocket(1111);
+        ServerSocket server = client.getServerSocket(1337);
+        System.out.println("server socket is running on port " + server.getLocalPort());
         
+        Thread.sleep(1200000);
     }
 }
